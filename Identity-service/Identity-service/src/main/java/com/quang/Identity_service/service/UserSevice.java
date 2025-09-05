@@ -3,6 +3,8 @@ package com.quang.Identity_service.service;
 import com.quang.Identity_service.dto.request.UserCreationRequest;
 import com.quang.Identity_service.dto.request.UserUpdateRequest;
 import com.quang.Identity_service.entity.User;
+import com.quang.Identity_service.exception.AppException;
+import com.quang.Identity_service.exception.ErorCode;
 import com.quang.Identity_service.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,9 @@ public class UserSevice {
     private UserRepository userRepository;
     public User createUser(UserCreationRequest request){
         User user = new User();
+
+        if (userRepository.existsByUsername(request.getUsername()))
+            throw new AppException(ErorCode.USER_EXISTED);
         user.setUsername(request.getUsername());
         user.setPassword(request.getPassword());
         user.setFirstName(request.getFirstName());
